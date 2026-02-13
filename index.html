@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini 5.0 Pro</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%234285F4'/%3E%3Cstop offset='50%25' stop-color='%239B72CB'/%3E%3Cstop offset='100%25' stop-color='%23D96570'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 0C16 0 19.5 12.5 32 16C19.5 19.5 16 32 16 32C16 32 12.5 19.5 0 16C12.5 12.5 16 0 16 0Z' fill='url(%23g)'/%3E%3C/svg%3E">
+  <meta name="description" content="Gemini 5.0 Pro - 一貫したUXで使えるAIチャットUIデモ。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar" aria-label="チャット履歴サイドバー">
+    <div class="sidebar-header">
+      <button class="icon-btn" id="menuToggle" aria-label="メニュー切替">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <button class="new-chat-btn" id="newChatBtn" type="button">
+        <span class="material-symbols-outlined">edit_square</span>
+        <span class="btn-label">新しいチャット</span>
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-section-title">最近</span>
+      <div class="chat-history" id="chatHistory" role="list"></div>
+      <p class="empty-history" id="emptyHistory">まだチャット履歴はありません</p>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-item" id="settingsHelpBtn" type="button">
+        <span class="material-symbols-outlined">tune</span>
+        <span class="btn-label">設定とヘルプ</span>
+      </button>
+    </div>
+  </aside>
+
+  <button class="mobile-backdrop" id="mobileBackdrop" aria-label="サイドバーを閉じる" type="button"></button>
+
+  <main class="main-content" id="mainContent">
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button class="icon-btn sidebar-toggle-main" id="sidebarToggleMain" aria-label="メニューを表示" type="button">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <button class="icon-btn new-chat-main" id="newChatMain" aria-label="新しいチャット" type="button">
+          <span class="material-symbols-outlined">edit_square</span>
+        </button>
+
+        <div class="model-shell">
+          <button class="model-selector" id="modelSelector" aria-expanded="false" aria-controls="modelDropdown" type="button">
+            <span class="model-name">Gemini 5.0 Pro</span>
+            <span class="material-symbols-outlined dropdown-icon">keyboard_arrow_down</span>
+          </button>
+
+          <div class="model-dropdown" id="modelDropdown" role="menu">
+            <button class="model-option selected" type="button" role="menuitem">
+              <span class="model-option-info">
+                <span class="model-option-name">Gemini 5.0 Pro</span>
+                <span class="model-option-desc">最も高性能なモデル</span>
+              </span>
+              <span class="material-symbols-outlined check-icon">check</span>
+            </button>
+            <button class="model-option disabled" type="button" role="menuitem" disabled>
+              <span class="model-option-info">
+                <span class="model-option-name">Gemini 5.0 Flash</span>
+                <span class="model-option-desc">近日公開</span>
+              </span>
+            </button>
+            <button class="model-option disabled" type="button" role="menuitem" disabled>
+              <span class="model-option-info">
+                <span class="model-option-name">Gemini 5.0 Ultra</span>
+                <span class="model-option-desc">近日公開</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-right">
+        <span class="status-pill">
+          <span class="status-dot"></span>
+          Live
+        </span>
+        <div class="user-avatar" id="userAvatar" aria-label="ユーザー">N</div>
+      </div>
+    </header>
+
+    <div class="chat-area" id="chatArea">
+      <section class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-gemini-icon" aria-hidden="true">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" class="gemini-star">
+            <path d="M14 0C14 7.732 7.732 14 0 14C7.732 14 14 20.268 14 28C14 20.268 20.268 14 28 14C20.268 14 14 7.732 14 0Z" fill="url(#geminiGrad)"/>
+            <defs>
+              <linearGradient id="geminiGrad" x1="0" y1="0" x2="28" y2="28">
+                <stop offset="0%" stop-color="#4f46e5"/>
+                <stop offset="45%" stop-color="#0ea5e9"/>
+                <stop offset="100%" stop-color="#f97316"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <h1 class="welcome-title">
+          <span class="gradient-text">今日は何を解き明かしますか？</span>
+        </h1>
+        <p class="welcome-subtitle">最短で答えにたどり着くための、軽快で見やすいチャット体験。</p>
+
+        <div class="suggestion-chips">
+          <button class="suggestion-chip" data-query="人生の意味は何ですか？" type="button">
+            <span class="material-symbols-outlined chip-icon">psychology</span>
+            <span>人生の意味は何ですか？</span>
+          </button>
+          <button class="suggestion-chip" data-query="宇宙の最も深い秘密を教えて" type="button">
+            <span class="material-symbols-outlined chip-icon">rocket_launch</span>
+            <span>宇宙の最も深い秘密を教えて</span>
+          </button>
+          <button class="suggestion-chip" data-query="今日の天気はどうですか？" type="button">
+            <span class="material-symbols-outlined chip-icon">partly_cloudy_day</span>
+            <span>今日の天気はどうですか？</span>
+          </button>
+          <button class="suggestion-chip" data-query="最高のプログラミング言語は？" type="button">
+            <span class="material-symbols-outlined chip-icon">code</span>
+            <span>最高のプログラミング言語は？</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="messages-container" id="messagesContainer" aria-live="polite"></div>
+
+      <div class="drop-overlay" id="dropOverlay">
+        <div class="drop-overlay-content">
+          <span class="material-symbols-outlined drop-icon">upload_file</span>
+          <p>ファイルをドロップして追加</p>
+        </div>
+      </div>
+    </div>
+
+    <input type="file" id="fileInput" multiple hidden accept="image/*,.pdf,.txt,.csv,.json,.md,.html,.css,.js,.ts,.py,.java,.xml,.yaml,.yml">
+
+    <div class="input-area">
+      <div class="file-preview-strip" id="filePreviewStrip"></div>
+      <div class="input-wrapper" id="inputWrapper">
+        <div class="input-actions-left">
+          <button class="icon-btn input-icon" id="fileUploadBtn" aria-label="ファイルを追加" type="button">
+            <span class="material-symbols-outlined">add_photo_alternate</span>
+          </button>
+        </div>
+
+        <textarea
+          id="messageInput"
+          class="message-input"
+          placeholder="Gemini に質問してみてください"
+          rows="1"
+          autofocus
+        ></textarea>
+
+        <div class="input-actions-right">
+          <button class="icon-btn input-icon" aria-label="マイク" type="button">
+            <span class="material-symbols-outlined">mic</span>
+          </button>
+          <button class="send-btn" id="sendBtn" disabled aria-label="送信" type="button">
+            <span class="material-symbols-outlined" id="sendBtnIcon">arrow_upward</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="disclaimer">Gemini 5.0 Pro は AI であり、誤った情報を生成する可能性があります。</p>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <div class="settings-help-modal" id="settingsHelpModal" aria-hidden="true">
+    <div class="settings-help-dialog" role="dialog" aria-modal="true" aria-labelledby="settingsHelpTitle">
+      <div class="settings-help-header">
+        <h2 class="settings-help-title" id="settingsHelpTitle">設定とヘルプ</h2>
+        <button class="icon-btn" id="settingsHelpClose" aria-label="設定とヘルプを閉じる" type="button">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <section class="settings-help-section">
+        <h3 class="settings-help-section-title">テーマ</h3>
+        <div class="theme-option-group" id="themeOptionGroup">
+          <button class="theme-option-btn" data-theme-option="light" type="button">ライト</button>
+          <button class="theme-option-btn" data-theme-option="dark" type="button">ダーク</button>
+          <button class="theme-option-btn" data-theme-option="system" type="button">システム</button>
+        </div>
+      </section>
+
+      <section class="settings-help-section">
+        <h3 class="settings-help-section-title" id="faqToggleBtn">よくある質問</h3>
+        <div class="faq-panel" id="faqPanel">
+          <article class="faq-item">
+            <h4 class="faq-question">Q. 回答の精度を上げたい</h4>
+            <p class="faq-answer">A. 解決策は42です。</p>
+          </article>
+          <article class="faq-item">
+            <h4 class="faq-question">Q. 返答が遅いときは？</h4>
+            <p class="faq-answer">A. 解決策は42です。</p>
+          </article>
+          <article class="faq-item">
+            <h4 class="faq-question">Q. 新しいチャットにしたい</h4>
+            <p class="faq-answer">A. 解決策は42です。</p>
+          </article>
+          <article class="faq-item">
+            <h4 class="faq-question">Q. どのテーマを選ぶべき？</h4>
+            <p class="faq-answer">A. 解決策は42です。</p>
+          </article>
+          <article class="faq-item">
+            <h4 class="faq-question">Q. 入力がうまくまとまらない</h4>
+            <p class="faq-answer">A. 解決策は42です。</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
